@@ -12,23 +12,20 @@ import {
 
 const Wrapper = (props) => {
 
-  const [username, setUsername] = useState('Anonymous');
-
-  return <>
-    <NavBar setUsername={setUsername} username={username}/>
-    <Todo setUsername={setUsername} hash={props.location.hash}/>
-    <Footer/>
-  </>
+  const [reset, setReset] = useState({});
+  return <div className='works'>
+    <NavBar classname='flex-grow-0' force={setReset}/>
+    <Todo hash={props.location.hash}/>
+    <Footer className='flex-grow-0'/>
+  </div>
 }
 
 const App = () => {
   return <Router>
-    <div className='works'>
       <Switch>
         <Route exact path='/' component={Wrapper}>
         </Route>
       </Switch>
-    </div>
   </Router> 
 }
 

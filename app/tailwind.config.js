@@ -5,7 +5,7 @@ module.exports = {
     extend: {},
     backgroundColor: theme => ({
       ...theme('colors'),
-      'bgCol' : '#DDD',
+      'bgCol' : '#f2ebeb',
       'navCol' : '#ABC'
      })
 
