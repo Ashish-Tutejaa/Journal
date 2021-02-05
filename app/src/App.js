@@ -1,25 +1,35 @@
-import logo from './logo.svg';
-import './App.css';
+import React, {useState, useEffect} from 'react';
+// import './App.css';
+import NavBar from './NavBar.js';
+import Todo from './Todo.js';
+import Footer from './Footer.js';
+import {
+  BrowserRouter as Router,
+  Switch,
+  Route,
+  Link
+} from "react-router-dom";
 
-function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+const Wrapper = (props) => {
+
+  const [username, setUsername] = useState('Anonymous');
+
+  return <>
+    <NavBar setUsername={setUsername} username={username}/>
+    <Todo setUsername={setUsername} hash={props.location.hash}/>
+    <Footer/>
+  </>
+}
+
+const App = () => {
+  return <Router>
+    <div className='works'>
+      <Switch>
+        <Route exact path='/' component={Wrapper}>
+        </Route>
+      </Switch>
     </div>
-  );
+  </Router> 
 }
 
 export default App;
