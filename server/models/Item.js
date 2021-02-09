@@ -8,7 +8,8 @@ const ItemSchema = new Schema({
 
     _id: {
         type: String,
-        default: uuid
+        default: uuid,
+        unique: true
     },
 
     title: {
@@ -27,7 +28,6 @@ const ItemSchema = new Schema({
     username: {
         type: String,
         required: true,
-
     },
 
 });

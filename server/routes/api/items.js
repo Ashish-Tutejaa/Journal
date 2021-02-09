@@ -4,56 +4,77 @@ const router = express.Router();
 //Item Model
 const Item = require("../../models/Item");
 
+//CORS MIDDLEWARE
+const CORS = (origin, header, method) => {
+
+    return (req,res,next) => {
+            res.set({
+                'Access-Control-Allow-Origin' : origin,
+                'Access-Control-Allow-Methods' : method,
+                'Access-Control-Allow-Headers' : header
+            })
+            next();
+        }
+}
+
+//CORS ROUTES
+router.options('/*', CORS('*','*','*'), (req,res) => {
+    res.status(200).end();
+})
+
 // @route  GET api/items
 // @desc   Get All items 
-// @access Public
-router.get("/", (req, res) => {
+// @access Private
+router.get("/:uname", CORS('*','*','*'), (req, res) => {
 
-    Item.find({ username: req.body.username })
+    Item.find({ username: req.params.uname })
         .sort({ date: -1 })
-        .then(items => res.json(items))
-
+        .then(items => res.status(200).json(items), err => {
+            res.status(500).json({err : "an internal server error occurred."});
+        })
 });
 
 // @route  POST api/items
 // @desc   Create An item 
-// @access Public
+// @access Private
 
-router.post("/", (req, res) => {
+router.post("/", CORS('*','*','*'), (req, res) => {
 
     const newItem = new Item({
         username: req.body.username,
         title: req.body.title,
         description: req.body.description,
-
     });
 
-    newItem.save()
-        .then(item => res.json(item))
-        .catch(err => console.log(err));
+    console.log(newItem);
 
+    newItem.save()
+        .then(item => res.status(200).json(item))
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({err : "an internal server error occurred."})
+        });
 });
 
 // @route  DELETE api/items/:_id
 // @desc   Delete An item 
-// @access Public
-router.delete("/:id", (req, res) => {
+// @access Private
+router.delete("/:id", CORS('*','*','*'), (req, res) => {
 
     Item.findById(req.params.id)
         .then(item => item.remove()
-            .then(() => res.json({ success: true })))
-
-        .catch(err => res.status(404).json({ success: false }));
+            .then(() => res.status(200).json({ success: true })))
+        .catch(err => res.status(404).json({ err : true }));
 
 });
 
 // @route  PATCH api/items
 // @desc   Update An item 
-// @access Public
+// @access Private
 
-router.patch("/:_id", (req, res) => {
+router.patch("/:_id", CORS('*','*','*'), (req, res) => {
 
-    const filter = { username: req.body.username, _id: req.params._id };
+    const filter = { _id: req.params._id };
     const updates = {
         title: req.body.title,
         description: req.body.description,
@@ -64,10 +85,11 @@ router.patch("/:_id", (req, res) => {
         (dberr, dbres) => {
             if (dberr) {
                 console.log(dberr);
+                res.status(500).json({err : "An internal error occurred."});
             }
             else {
-                console.log("SUccess")
-                res.status(200).end();
+                console.log("Success")
+                res.status(200).json({success : true});
                 console.log(dbres);
             }
         });

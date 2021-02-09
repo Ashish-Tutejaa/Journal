@@ -1,5 +1,4 @@
 import React, {useState, useEffect} from 'react';
-// import './App.css';
 import NavBar from './NavBar.js';
 import Todo from './Todo.js';
 import Footer from './Footer.js';
